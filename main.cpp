@@ -18,7 +18,7 @@ bool EventTriggered(double interval)
 
 int main () 
 {
-    InitWindow(500, 620, "raylib Tetris"); // Janela com 500x620 e rodando a 60 quadros por segundo
+    InitWindow(500, 620, "Tetris C++"); // Janela com 500x620 e rodando a 60 quadros por segundo
     SetTargetFPS(60);
 
     Font font = LoadFontEx("Font/monogram.ttf", 64, 0, 0);
