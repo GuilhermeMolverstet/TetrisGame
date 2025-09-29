@@ -14,3 +14,23 @@ O TetrisGame tem como objetivo recriar o famoso jogo de quebra-cabeças, onde pe
 - Interface gráfica simples e intuitiva
 - Controle de movimentos (esquerda, direita, baixo, girar)
 - Velocidade progressiva
+  
+## Pré-requisitos para rodar o jogo
+Compilador C++ (g++ ou similar)
+Biblioteca Raylib instalada em seu sistema (usada para gráficos e áudio)
+Possuir as dependências do projeto (fontes, áudio, etc.)
+
+## Passos para Execução
+
+Clone o repositório:
+- git clone https://github.com/GuilhermeMolverstet/TetrisGame.git
+- cd TetrisGame
+
+## Compile o projeto:
+
+- g++ main.cpp game.cpp block.cpp grid.cpp blocks.cpp -o TetrisGame -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+Certifique-se que os arquivos do Raylib estejam em seu PATH ou inclua o caminho com -I e -L se necessário.
+
+## Para executar o jogo:
+
+./TetrisGame ou na tecla F5
