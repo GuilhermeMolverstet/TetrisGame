@@ -9,14 +9,14 @@ Game::Game()
     nextBlock = GetRamdomBlock();
     gameOver = false;
     score = 0;
-    InitAudioDevice();
+    InitAudioDevice(); // Configrações de audio
     music = LoadMusicStream("Sounds/music.mp3");
     PlayMusicStream(music);
     rotateSound = LoadSound("Sounds/rotate.mp3");
     clearSound = LoadSound("Sounds/clear.mp3");
 }
 
-Game::~Game()
+Game::~Game() // Libera os recursos de audio ao fechar o jogo
 {
     UnloadSound(rotateSound);
     UnloadSound(clearSound);
@@ -24,9 +24,9 @@ Game::~Game()
     CloseAudioDevice();
 }
 
-Block Game::GetRamdomBlock()
+Block Game::GetRamdomBlock() // Retorna um bloco aleatorio da lista e o remove dela
 {
-    if (blocks.empty())
+    if (blocks.empty()) // Se acabou a lista, reinicia com todos blocos
     {
         blocks = GetAllBlocks();
     }
@@ -36,7 +36,7 @@ Block Game::GetRamdomBlock()
     return block;
 }
 
-std::vector<Block> Game::GetAllBlocks()
+std::vector<Block> Game::GetAllBlocks() // Cria uma lista com todos os blocos do game
 {
     return {IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()};
 }
@@ -45,7 +45,7 @@ void Game::Draw()
 {
     grid.draw();
     currentBlock.Draw(11, 11);
-    switch (nextBlock.id)
+    switch (nextBlock.id) // Ajuste nas posições dos boloco 3 e 4
     {
     case 3:
         nextBlock.Draw(255,290);
@@ -59,7 +59,7 @@ void Game::Draw()
     }
 }
 
-void Game::HandleInput()
+void Game::HandleInput() // Entrada do teclado
 {
     int keyPressed = GetKeyPressed();
     if (gameOver && keyPressed != 0)
@@ -67,7 +67,7 @@ void Game::HandleInput()
         gameOver = false;
         Reset();
     }
-    switch (keyPressed)
+    switch (keyPressed) // Movimentos com as teclas no teclado 
     {
     case KEY_LEFT:
         MoveBlockLeft();
@@ -77,7 +77,7 @@ void Game::HandleInput()
         break;
     case KEY_DOWN:
         MoveBlockDown();
-        UpdateScore(0,1);
+        UpdateScore(0,1); // Ao mover para baixo ganha 1 ponto
         break;
     case KEY_UP:
         RotateBlock();
@@ -122,7 +122,7 @@ void Game:: MoveBlockDown() //Move o bloco para baixo
     }
 }
 
-bool Game::IsBlockOutside()
+bool Game::IsBlockOutside() // Verifica se alguma célula do bloco saiu fora da grade
 {
     std::vector<Position> titles = currentBlock.GetCellPositions();
     for (Position item: titles)
@@ -135,12 +135,12 @@ bool Game::IsBlockOutside()
     return false;
 }
 
-void Game::RotateBlock()
+void Game::RotateBlock() // Rotaciona o bloco
 {
     if(!gameOver)
     {
         currentBlock.Rotate();
-        if (IsBlockOutside() || BlockFits() == false) // Ira verificar se o bloco n esta rodando para fora da janela
+        if (IsBlockOutside() || BlockFits() == false) // Ira verificar se o bloco não esta rodando para fora da janela
         {
             currentBlock.UndoRotation();
         }
@@ -151,7 +151,7 @@ void Game::RotateBlock()
     }
 }
 
-void Game::LockBlock()
+void Game::LockBlock() // Fixa o bloco no fundo do tabuleiro ou quando enconsta em outro
 {
     std::vector<Position> tiles = currentBlock.GetCellPositions();
     for (Position item: tiles)
@@ -159,13 +159,13 @@ void Game::LockBlock()
         grid.grid[item.row][item.column] = currentBlock.id;
     }
     currentBlock = nextBlock;
-    if (BlockFits() == false)
+    if (BlockFits() == false) // Se o bloco não couber 'GameOver'
     {
         gameOver = true;
     }
     
     nextBlock = GetRamdomBlock();
-    int rowsCleared = grid.ClearFullRows();
+    int rowsCleared = grid.ClearFullRows(); // Limpa as linhas cheias e atualiza o score
     if (rowsCleared > 0)
     {
         PlaySound(clearSound);
@@ -173,7 +173,7 @@ void Game::LockBlock()
     }
 }
 
-bool Game::BlockFits()
+bool Game::BlockFits() // Verifica se o bloco pode ocupar a posição atual
 {
     std::vector<Position> tiles = currentBlock.GetCellPositions();
     for (Position item: tiles)
@@ -186,7 +186,7 @@ bool Game::BlockFits()
     return true;
 }
 
-void Game::Reset()
+void Game::Reset() // Reinicia o game
 {
     grid.Initialize();
     blocks = GetAllBlocks();
@@ -195,7 +195,7 @@ void Game::Reset()
     score = 0;
 }
 
-void Game::UpdateScore(int LinesCleared, int moveDownPoints)
+void Game::UpdateScore(int LinesCleared, int moveDownPoints) // Atualiza o score baseado nas linhas eliminadas ou movimentos para baixo
 {
     switch (LinesCleared)
     {
@@ -214,5 +214,5 @@ void Game::UpdateScore(int LinesCleared, int moveDownPoints)
     default:
         break;
     }
-    score += moveDownPoints;
+    score += moveDownPoints; // Pontos extras por mover para baixo manualmente
 }
